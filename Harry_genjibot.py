@@ -54,7 +54,6 @@ async def upload(ctx, *args):
             PATH = imageName
             im = pyimgur.Imgur(CLIENT_ID)
             uploaded_image = im.upload_image(PATH, title=str(ctx.author.name) + "_" + args[0])
-            print(uploaded_image.deletehash)
             os.remove(imageName)
             f = open("unit_links.txt", "a")
             f.write(str(ctx.author.name).lower() + "_" + args[0].lower() + ": " + uploaded_image.link + "\n")
