@@ -1,10 +1,9 @@
 from discord.ext import commands
-import discord
 import pyimgur
 import requests
 import shutil
 import os
-from requests import *
+
 
 client = commands.Bot(command_prefix='!')
 CLIENT_ID = "ENTER ID"
