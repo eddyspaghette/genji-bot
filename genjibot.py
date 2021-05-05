@@ -2,6 +2,10 @@ import discord
 import os
 from dotenv import load_dotenv
 import grabd
+from discord.ext import commands
+import pyimgur
+import requests
+import shutil
 
 # Load environment variables
 load_dotenv()
