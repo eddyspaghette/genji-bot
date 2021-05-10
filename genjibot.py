@@ -22,9 +22,6 @@ async def on_ready():
 
 async def run_calc(stat_list, value_list, gear_options):
     return grabd.run(stat_list, value_list, gear_options)
-# @client.command()
-# async def ping(ctx):
-#     await ctx.send(f'Pong! {round(client.latency*1000)}ms')
 
 @client.command()
 async def gear(ctx):
