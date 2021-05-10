@@ -1,1 +1,1 @@
-worker: python bot/genjibot.py
+worker: python genjibot.py
