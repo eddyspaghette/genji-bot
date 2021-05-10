@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 
 text_vals = {
@@ -29,6 +30,8 @@ parse_vals = {
     'supported_stats': ['atk', 'def', 'hp', 'atkflat', 'hpflat', 'defflat', 'crit', 'cd', 'spd', 'eff', 'res']
 }
 
+GECKODRIVER_PATH = '/app/vendor/geckodriver/geckodriver'
+FIREFOX_PATH = '/app/vendor/firefox/firefox'
 
 def run(stat_list, value_list, gear_options=None):
     text = ""
@@ -38,7 +41,8 @@ def run(stat_list, value_list, gear_options=None):
     #Firefox headless options & start webbdriver
     firefox_options = FirefoxOptions()
     firefox_options.headless = True
-    driver = webdriver.Firefox(options=firefox_options)
+    fire_bin = FirefoxBinary(FIREFOX_PATH)
+    driver = webdriver.Firefox(options=firefox_options, executable_path=GECKODRIVER_PATH, firefox_binary=fire_bin)
 
     # vars for the website
     gear_level_id= 'gear-lv'
