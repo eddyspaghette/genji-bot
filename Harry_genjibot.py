@@ -3,10 +3,16 @@ import pyimgur
 import requests
 import shutil
 import os
+import grabd
+from dotenv import load_dotenv
+from grabd import text_vals, parse_vals
 
+
+#load environment variables
+load_dotenv()
 
 client = commands.Bot(command_prefix='!')
-CLIENT_ID = "ENTER ID"
+CLIENT_ID = os.getenv("IMGUR_TOKEN")
 
 
 @client.event
@@ -14,9 +20,69 @@ async def on_ready():
     print('ready')
 
 
+async def run_calc(stat_list, value_list, gear_options):
+    return grabd.run(stat_list, value_list, gear_options)
 # @client.command()
 # async def ping(ctx):
 #     await ctx.send(f'Pong! {round(client.latency*1000)}ms')
+
+@client.command()
+async def gear(ctx):
+    if ctx.author == client.user:
+        return
+
+    await ctx.send (
+            "Do you need to change the defaults?\nThe defaults are 85, purple ONLY +15 is supported\n(y/n)"
+    )
+    gear_options = []
+    def check(m):
+        return (m.content == 'y' or m.content == 'n') and m.channel == ctx.channel and m.author == ctx.author
+
+    msg = await client.wait_for('message', check=check)
+
+    if (msg.content == 'y'):
+        #Grab gear lvl, geartype, gear enhance
+        await ctx.send("Please enter the gear level, gear type/color (options below) follwed by a space")
+        await ctx.send(f"Gear level: {text_vals['gear-levels']}, Gear-color: {text_vals['gear-type']}")
+        def check1(m):
+            op1_list = m.content.split(' ')
+            if op1_list[0] in text_vals['gear-levels'] and op1_list[1] in text_vals['gear-type']:
+                def_lvl = "lv" + op1_list[0]
+                if op1_list[1] != 'purple':
+                    def_geartype = "g" + op1_list[1]
+                else:
+                    def_geartype = "gpink"
+                gear_options.append(def_lvl)
+                gear_options.append(def_geartype)
+                return True
+            return False
+        msg = await client.wait_for('message', check=check1)
+        await ctx.send(f"Gear level and gear type changed: {msg.content} +15")
+            
+            
+        arglist = parse_vals['supported_stats']
+        await ctx.send(f"Please enter 4 stats you wish to calculate: {arglist}")
+
+        def check2(m):
+            response_list = set(m.content.split(' '))
+            return len(response_list) == 4 and m.channel == ctx.channel and set(response_list).issubset(set(arglist)) and m.author == ctx.author
+        msg = await client.wait_for('message', check=check2)
+        await ctx.send(f"Stats received: {msg.content}")
+
+
+
+        await ctx.send(f"Please enter the corresponding values for the stats above: {msg.content}")
+
+        def check3(m):
+            return m.channel == ctx.channel and len(m.content.split(' ')) == 4 and m.author == ctx.author
+        msg2 = await client.wait_for('message', check=check3)
+        stats_list = zip(msg.content.split(' '), msg2.content.split(' '))
+        stats_list = dict(stats_list)
+
+        await ctx.send(f"The stats received were: {stats_list}\n**Calculating**")
+        text = await run_calc(msg.content.split(' '), msg2.content.split(' '), gear_options)
+        await ctx.send(f"{ctx.author.mention}\n{text}")
+
 
 
 @client.command(aliases=['Cry', 'cry'])
@@ -243,4 +309,4 @@ async def removeunit(ctx, *args):
         return
 
 
-client.run('ADD THE THING HERE')
+client.run(os.getenv('GENJI_TOKEN'))

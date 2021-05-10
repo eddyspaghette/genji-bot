@@ -5,7 +5,32 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 
-def run():
+
+text_vals = {
+    'gear-levels': ['85', '88', '90'],
+    'gear-type': ['white', 'blue', 'purple', 'red'],
+}
+
+
+parse_vals = {
+    'gear-lv': ['lv85', 'lv90', 'lv90'],
+    'gear-type': ['gwhite', 'gblue', 'gpink', 'gred'],
+    'atk': 'atkper',
+    'def': 'defper',
+    'hp': 'hpper',
+    'atkflat': 'atkflat',
+    'defflat': 'defflat',
+    'hpflat': 'hpflat',
+    'crit': 'critch',
+    'cd': 'critdmg',
+    'spd': 'spd',
+    'eff': 'eff',
+    'res': 'res',
+    'supported_stats': ['atk', 'def', 'hp', 'atkflat', 'hpflat', 'defflat', 'crit', 'cd', 'spd', 'eff', 'res']
+}
+
+
+def run(stat_list, value_list, gear_options=None):
     text = ""
     #url for gear
     url = 'https://meowyih.github.io/epic7-gear/index.html?lang=en'
@@ -22,18 +47,24 @@ def run():
     default_gear_lvl = 'lv85'
     default_gear_type = 'gpink'
     default_enhance_level = 'gear-lv15'
+
+    # calc and response btn
     calc_btn_id = 'btn-calc'
     response_id = 'errmsg'
 
 
     id_args = [gear_level_id, gear_type_id, gear_enhance_id]
     val_args = [default_gear_lvl, default_gear_type, default_enhance_level]
+    if len(gear_options) == 2:
+        val_args = gear_options
+        val_args.append(default_enhance_level)
+    
 
     print("Running the selenium script...")
 
     driver.get(f"{url}")
-    args = ['atkper', 'defper', 'hpper', 'spd']
-    percents = [15, 15, 15, 10]
+    args = stat_list
+    percents = value_list
 
     #select default gear lvl, type, enhance lvl
     for idx, id in enumerate(id_args):
@@ -44,16 +75,15 @@ def run():
     for index, arg in enumerate(args):
         try:
             element = WebDriverWait(driver, 5).until(
-                EC.presence_of_element_located((By.ID, f"{arg}"))
+                EC.presence_of_element_located((By.ID, f"{parse_vals[arg]}"))
             )
         finally:
-            element = driver.find_element_by_id(f"{arg}")
+            element = driver.find_element_by_id(f"{parse_vals[arg]}")
             element.send_keys(percents[index])
 
     #Calculate
     element = driver.find_element_by_id(calc_btn_id)
     element.click()
-
     try:
         element = WebDriverWait(driver, 5).until(
             EC.presence_of_element_located((By.ID, response_id))
