@@ -1,13 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver import FirefoxOptions
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 
-FIREFOX_PATH = '/app/vendor/firefox/firefox'
-GECKODRIVER_PATH = '/app/vendor/geckodriver/geckodriver'
 
 text_vals = {
     'gear-levels': ['85', '88', '90'],
@@ -41,8 +38,7 @@ def run(stat_list, value_list, gear_options=None):
     #Firefox headless options & start webbdriver
     firefox_options = FirefoxOptions()
     firefox_options.headless = True
-    firefox_binary = FirefoxBinary(FIREFOX_PATH)
-    driver = webdriver.Firefox(options=firefox_options, firefox_binary=firefox_binary, executable_path=GECKODRIVER_PATH)
+    driver = webdriver.Firefox(options=firefox_options)
 
     # vars for the website
     gear_level_id= 'gear-lv'
