@@ -26,12 +26,13 @@ client.remove_command('help')
 async def help(ctx, *argument):
     if not argument:
         await ctx.send("```Commands:"
-                       "\n !cry             <:FeelsStrongMan:730679903812321321>"
+                       '\n !cry             <:FeelsStrongMan:730679903812321321>'
                        "\n !gear            Turns on interactive mode"
+                       "\n !help            Shows this message"
+                       "\n Rebels Only:"
                        "\n !getunits        !help getunits      for more info"
                        "\n !removeunit      !help removeunits   for more info"
-                       "\n !upload          !help upload        for more info"
-                       "\n !help            Shows this message```")
+                       "\n !upload          !help upload        for more info```")
         return
     if argument[0] == "getunits" and len(argument) == 1:
         await ctx.send("```Shows all of a user's uploaded units. \n"
@@ -122,6 +123,7 @@ async def cry(ctx):
 
 
 @client.command()
+@commands.has_role('rebels')
 async def upload(ctx, *args):
     if not args:
         print("NO FILE NAME FOUND")
@@ -158,6 +160,7 @@ async def upload(ctx, *args):
 
 
 @client.command()
+@commands.has_role('rebels')
 async def getunits(ctx, *args):
     names = []
     units = []
@@ -281,6 +284,7 @@ async def getunits(ctx, *args):
 
 
 @client.command()
+@commands.has_role('rebels')
 async def removeunit(ctx, *args):
     def check(m):
         return m.channel == ctx.channel and m.author == ctx.author
