@@ -18,7 +18,41 @@ CLIENT_ID = os.getenv("IMGUR_TOKEN")
 @client.event
 async def on_ready():
     print('ready')
+    
+client.remove_command('help')
 
+
+@client.command()
+async def help(ctx, *argument):
+    if not argument:
+        await ctx.send("```Commands:"
+                       "\n !cry"
+                       "\n !gear"
+                       "\n !getunits"
+                       "\n !removeunit"
+                       "\n !upload"
+                       "\n !help             Shows this message```")
+        return
+    if argument[0] == "getunits" and len(argument) == 1:
+        await ctx.send("```Shows all of a user's uploaded units. \n"
+                       "Usage: \n"
+                       "!getunits \n"
+                       "!getunits <discord id> <unit name>```")
+        return
+    if argument[0] == "removeunit" and len(argument) == 1:
+        await ctx.send("```Removes a unit from the album. \n"
+                       "Usage: \n"
+                       "!removeunit \n"
+                       "!removeunit <unit name>```")
+        return
+    if argument[0] == "upload" and len(argument) == 1:
+        await ctx.send("```Uploads a screenshot of an unit to the album. \n"
+                       "Usage: \n"
+                       "    upload an image onto discord with the following description: \n"
+                       "    !upload <unit name>```")
+        return
+
+    
 
 async def run_calc(stat_list, value_list, gear_options):
     return grabd.run(stat_list, value_list, gear_options)
