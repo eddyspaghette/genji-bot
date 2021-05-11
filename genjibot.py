@@ -82,8 +82,8 @@ async def gear(ctx):
 
 
 
-@client.command(aliases=['Cry', 'cry'])
-async def _cry(ctx):
+@client.command()
+async def cry(ctx):
     await ctx.send("Jickie left me. Now I'm all alone... :FeelsStrongMan:")
 
 
