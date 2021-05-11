@@ -57,28 +57,28 @@ async def gear(ctx):
         await ctx.send(f"Gear level and gear type changed: {msg.content} +15")
             
             
-        arglist = parse_vals['supported_stats']
-        await ctx.send(f"Please enter 4 stats you wish to calculate: {arglist}")
+    arglist = parse_vals['supported_stats']
+    await ctx.send(f"Please enter 4 stats you wish to calculate: {arglist}")
 
-        def check2(m):
-            response_list = set(m.content.split(' '))
-            return len(response_list) == 4 and m.channel == ctx.channel and set(response_list).issubset(set(arglist)) and m.author == ctx.author
-        msg = await client.wait_for('message', check=check2)
-        await ctx.send(f"Stats received: {msg.content}")
+    def check2(m):
+        response_list = set(m.content.split(' '))
+        return len(response_list) == 4 and m.channel == ctx.channel and set(response_list).issubset(set(arglist)) and m.author == ctx.author
+    msg = await client.wait_for('message', check=check2)
+    await ctx.send(f"Stats received: {msg.content}")
 
 
 
-        await ctx.send(f"Please enter the corresponding values for the stats above: {msg.content}")
+    await ctx.send(f"Please enter the corresponding values for the stats above: {msg.content}")
 
-        def check3(m):
-            return m.channel == ctx.channel and len(m.content.split(' ')) == 4 and m.author == ctx.author
-        msg2 = await client.wait_for('message', check=check3)
-        stats_list = zip(msg.content.split(' '), msg2.content.split(' '))
-        stats_list = dict(stats_list)
+    def check3(m):
+        return m.channel == ctx.channel and len(m.content.split(' ')) == 4 and m.author == ctx.author
+    msg2 = await client.wait_for('message', check=check3)
+    stats_list = zip(msg.content.split(' '), msg2.content.split(' '))
+    stats_list = dict(stats_list)
 
-        await ctx.send(f"The stats received were: {stats_list}\n**Calculating**")
-        text = await run_calc(msg.content.split(' '), msg2.content.split(' '), gear_options)
-        await ctx.send(f"{ctx.author.mention}\n{text}")
+    await ctx.send(f"The stats received were: {stats_list}\n**Calculating**")
+    text = await run_calc(msg.content.split(' '), msg2.content.split(' '), gear_options)
+    await ctx.send(f"{ctx.author.mention}\n{text}")
 
 
 
