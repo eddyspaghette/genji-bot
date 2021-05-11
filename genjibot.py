@@ -26,12 +26,12 @@ client.remove_command('help')
 async def help(ctx, *argument):
     if not argument:
         await ctx.send("```Commands:"
-                       "\n !cry"
-                       "\n !gear"
-                       "\n !getunits"
-                       "\n !removeunit"
-                       "\n !upload"
-                       "\n !help             Shows this message```")
+                       "\n !cry             <:FeelsStrongMan:730679903812321321>"
+                       "\n !gear            Turns on interactive mode"
+                       "\n !getunits        !help getunits      for more info"
+                       "\n !removeunit      !help removeunits   for more info"
+                       "\n !upload          !help upload        for more info"
+                       "\n !help            Shows this message```")
         return
     if argument[0] == "getunits" and len(argument) == 1:
         await ctx.send("```Shows all of a user's uploaded units. \n"
