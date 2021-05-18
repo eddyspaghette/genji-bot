@@ -26,7 +26,7 @@ client.remove_command('help')
 async def help(ctx, *argument):
     if not argument:
         await ctx.send("```Commands:"
-                       '\n !cry             <:FeelsStrongMan:730679903812321321>'
+                       "\n !cry             <:FeelsStrongMan:730679903812321321>"
                        "\n !gear            Turns on interactive mode"
                        "\n !help            Shows this message"
                        "\n Rebels Only:"
