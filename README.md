@@ -9,4 +9,7 @@ It is able to calculate the rarity of equipments and store pictures of units gen
 - !gear [starts an interactive session with the user]
 - !help [list of commands supported]
 - !upload <name of picture> [uploads a picture to a database]
+  
+## Example Use:
 
+![image](https://user-images.githubusercontent.com/60508293/122029087-7574db80-cd81-11eb-9703-7de0823e2cef.png)
