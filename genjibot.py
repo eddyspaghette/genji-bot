@@ -36,7 +36,7 @@ async def help(ctx, *argument):
     if argument[0] == "unitbuilds" and len(argument) == 1:
         await ctx.send("```Shows an uploaded unit's builds. \n"
                        "Usage: \n"
-                       "!unitbuilds \n")
+                       "!unitbuilds \n```")
         return
     if argument[0] == "upload" and len(argument) == 1:
         await ctx.send("```Uploads a screenshot of an unit to the album. \n"
