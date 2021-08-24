@@ -261,9 +261,7 @@ async def upload(ctx):
             f.close()
             await ctx.send(">>> Unit added! \nCheck with the command !unitbuilds")
 
-
 @client.command()
-@commands.has_role('rebels')
 async def unitbuilds(ctx, *args):
     names = []
     descriptions = []
@@ -363,5 +361,5 @@ async def unitbuilds(ctx, *args):
             await ctx.send(embed=embed)
 
 
-
+            
 client.run(os.getenv('GENJI_TOKEN'))
