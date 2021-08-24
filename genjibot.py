@@ -1,4 +1,5 @@
 from discord.ext import commands
+import discord
 import pyimgur
 import requests
 import shutil
