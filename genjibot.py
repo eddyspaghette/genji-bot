@@ -30,27 +30,19 @@ async def help(ctx, *argument):
                        "\n !gear            Turns on interactive mode"
                        "\n !help            Shows this message"
                        "\n Rebels Only:"
-                       "\n !getunits        !help getunits      for more info"
-                       "\n !removeunit      !help removeunits   for more info"
+                       "\n !unitbuilds        !help unitbuilds      for more info"
                        "\n !upload          !help upload        for more info```")
         return
-    if argument[0] == "getunits" and len(argument) == 1:
-        await ctx.send("```Shows all of a user's uploaded units. \n"
+    if argument[0] == "unitbuilds" and len(argument) == 1:
+        await ctx.send("```Shows an uploaded unit's builds. \n"
                        "Usage: \n"
-                       "!getunits \n"
-                       "!getunits <discord id> <unit name>```")
-        return
-    if argument[0] == "removeunit" and len(argument) == 1:
-        await ctx.send("```Removes a unit from the album. \n"
-                       "Usage: \n"
-                       "!removeunit \n"
-                       "!removeunit <unit name>```")
+                       "!unitbuilds \n")
         return
     if argument[0] == "upload" and len(argument) == 1:
         await ctx.send("```Uploads a screenshot of an unit to the album. \n"
                        "Usage: \n"
                        "    upload an image onto discord with the following description: \n"
-                       "    !upload <unit name>```")
+                       "    !upload```")
         return
 
     
