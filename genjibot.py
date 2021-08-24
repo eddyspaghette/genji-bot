@@ -116,7 +116,6 @@ async def cry(ctx):
 
 @client.command()
 @commands.has_role('rebels')
-@client.command()
 async def upload(ctx):
     units = []
     namesindb = []
