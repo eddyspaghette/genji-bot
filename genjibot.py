@@ -14,6 +14,19 @@ load_dotenv()
 
 client = commands.Bot(command_prefix='!')
 CLIENT_ID = os.getenv("IMGUR_TOKEN")
+DROPBOX_TOKEN = os.getenv("DROPBOX_TOKEN")
+
+dbx = dropbox.Dropbox(DROPBOX_TOKEN)
+
+# Downloads file from dropbox
+def download_file(tempfile, filename):
+    metadata = dbx.files_download_to_file(tempfile, filename)
+    return metadata
+
+# Uploads a file to dropbox
+def upload_file(filename, localfile):
+    with open(localfile, "rb") as f:
+        dbx.files_upload(f.read(), filename, mute=True)
 
 
 @client.event
@@ -116,7 +129,6 @@ async def cry(ctx):
 
 
 @client.command()
-@commands.has_role('rebels')
 async def upload(ctx):
     units = []
     namesindb = []
@@ -256,11 +268,16 @@ async def upload(ctx):
             im = pyimgur.Imgur(CLIENT_ID)
             uploaded_image = im.upload_image(PATH, title=str(linename))
             os.remove(tempimagename)
-            f = open("unit_links.txt", "a")
+            download_file("tempfile.txt", "/unit_and_imgurlinks.txt")
+            f = open("tempfile.txt", "a")
             f.write(linename + "; " + uploaded_image.link + "\n")
             print(uploaded_image.link)
             f.close()
+            dbx.files_delete_v2("/unit_and_imgurlinks.txt")
+            upload_file("/unit_and_imgurlinks.txt", "tempfile.txt")
+            os.remove("tempfile.txt")
             await ctx.send(">>> Unit added! \nCheck with the command !unitbuilds")
+
 
 @client.command()
 async def unitbuilds(ctx, *args):
@@ -280,8 +297,9 @@ async def unitbuilds(ctx, *args):
         # asks user who, then lists out names
         await ctx.send(">>> Which unit would you like to look at? \n")
 
+        download_file("tempfile.txt", "/unit_and_imgurlinks.txt")
         # adds units to names array
-        with open("unit_links.txt") as file:
+        with open("tempfile.txt") as file:
             for line in file:
                 names.append(line.split(':')[0])
 
@@ -310,7 +328,7 @@ async def unitbuilds(ctx, *args):
             userinputtedunit = str(unit.content).lower()
 
         # scans text file
-        with open("unit_links.txt") as file:
+        with open("tempfile.txt") as file:
             for line in file:
                 unitname = line.split(':')[0].lower()
                 # if user input is in the text file
@@ -343,9 +361,9 @@ async def unitbuilds(ctx, *args):
 
             unitcolor = ""
             uniturl = ""
-
+            download_file("tempunitinfo.txt", "/unit_info.txt")
             # scans unit-info and gets the unit-thumbnail-url and unit color
-            with open("unit_info.txt") as file:
+            with open("tempunitinfo.txt") as file:
                 for line in file:
                     # if unit-info's name is same as user inputted name
                     if line.split(':')[0].lower() == userinputtedunit:
@@ -361,6 +379,8 @@ async def unitbuilds(ctx, *args):
 
             await ctx.send(embed=embed)
 
+            os.remove("tempfile.txt")
+            os.remove("tempunitinfo.txt")
 
             
 client.run(os.getenv('GENJI_TOKEN'))
