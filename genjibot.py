@@ -136,19 +136,22 @@ async def upload(ctx):
 
     gearset4 = ["Speed", "Counter", "Attack", "Destruction", "Lifesteal", "Rage", "Revenge", "Injury"]
     gearset2 = ["Crit", "Hit", "Health", "Defense", "Resist", "Immunity", "Unity", "Penetration"]
+    
+    download_file("tempunitinfo.txt", "/unit_info.txt")
 
     # populate units array
-    with open("unit_info.txt") as file:
+    with open("tempunitinfo.txt") as file:
         for line in file:
             units.append(str(line.split(':')[0]).lower())
 
-    with open("unit_info.txt") as file:
+    with open("tempunitinfo.txt") as file:
         for line in file:
             namesindb.append(str(line.split(':')[0]).title())
 
     def checkinput(m):
         return m.channel == ctx.channel and m.author == ctx.author
-
+    
+    os.remove("tempunitinfo.txt")
     stringofnames = ""
 
     sorted(namesindb)
