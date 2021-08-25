@@ -376,7 +376,8 @@ async def upload(ctx):
             r = requests.get(image, stream=True)
             linename = unitselection.title() + ": " + finalsetselection
             tempimagename = unitselection.title() + ":" + finalsetselection + ".jpg"
-            with open("unit_links.txt") as file:
+            download_file("tempunitinfosets.txt", "/unit_and_imgurlinks.txt")
+            with open("tempunitinfosets.txt") as file:
                 for line in file:
                     if line.split(';')[0] == linename:
                         await ctx.send(">>> Unit already exists!")
