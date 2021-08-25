@@ -134,11 +134,13 @@ async def upload(ctx):
     units = []
     namesindb = []
 
-    gearset4 = ["Speed", "Counter", "Attack", "Destruction", "Lifesteal", "Rage", "Revenge", "Injury"]
-    gearset2 = ["Crit", "Hit", "Health", "Defense", "Resist", "Immunity", "Unity", "Penetration"]
-    
-    download_file("tempunitinfo.txt", "/unit_info.txt")
+    finalsetselection = ""
 
+    gearset4 = ["Speed", "Counter", "Attack", "Destruction", "Lifesteal", "Rage", "Revenge", "Injury", "2-set",
+                "Cancel"]
+    gearset2 = ["Crit", "Hit", "Health", "Defense", "Resist", "Immunity", "Unity", "Penetration", "None", "Cancel"]
+
+    download_file("tempunitinfo.txt", "/unit_info.txt")
     # populate units array
     with open("tempunitinfo.txt") as file:
         for line in file:
@@ -150,13 +152,13 @@ async def upload(ctx):
 
     def checkinput(m):
         return m.channel == ctx.channel and m.author == ctx.author
-    
+
     os.remove("tempunitinfo.txt")
     stringofnames = ""
 
     sorted(namesindb)
     for i in range(len(namesindb)):
-        stringofnames += (str(i+1) + ": " + namesindb[i].title() + "\n")
+        stringofnames += (str(i + 1) + ": " + namesindb[i].title() + "\n")
 
     await ctx.send(">>> What unit build would you like to upload?")
     await ctx.send(f"```{stringofnames} ```")
@@ -207,36 +209,151 @@ async def upload(ctx):
 
     # User picks first 4 set choice, either through a number or typing it out
     if firstsetselection.content.isdigit():
+        # if the selection is a number, and is in the range between len() and 1,
+        # set decision, otherwise exit from command
         if int(firstsetselection.content) <= len(gearset4) and int(firstsetselection.content) != 0:
             setselection4 = gearset4[int(firstsetselection.content) - 1]
         else:
             await ctx.send(">>> Invalid number")
             return
     else:
+        # if the user inputs a string, check if its in the array, else exit from command
         if firstsetselection.content.title() in gearset4:
             setselection4 = firstsetselection.content.title()
         else:
             await ctx.send(">>> No set found")
             return
 
-    await ctx.send(f">>> You have picked " + setselection4)
-    await ctx.send(">>> Enter second set: ")
-    await ctx.send(f"```{listoutgearset2}```")
-    secondsetselection = await client.wait_for("message", check=checkinput)
-    # User picks first 2 set choice, either through a number or typing it out
-    if secondsetselection.content.isdigit():
-        if int(secondsetselection.content) <= len(gearset2) and int(secondsetselection.content) != 0:
-            setselection2 = gearset2[int(secondsetselection.content) - 1]
+    # if user chooses cancel, print goodbye and exit
+    if setselection4 == gearset4[9]:
+        await ctx.send(">>> Goodbye!")
+        return
+
+    # if user picks 2 set first
+    if setselection4 == gearset4[8]:
+        await ctx.send(">>> What is the first set? ")
+        await ctx.send(f"```{listoutgearset2}```")
+        twosetselection1 = await client.wait_for("message", check=checkinput)
+        # ---
+        # User picks first 2 set choice, either through a number or typing it out
+        if twosetselection1.content.isdigit():
+            # if the selection is a number, and is in the range between len() and 1,
+            # set decision, otherwise exit from command
+            if int(twosetselection1.content) <= len(gearset2) and int(twosetselection1.content) != 0:
+                first2setselection = gearset2[int(twosetselection1.content) - 1]
+            else:
+                await ctx.send(">>> Invalid number")
+                return
         else:
-            await ctx.send(">>> Invalid number")
+            # if the user inputs a string, check if its in the array, else exit from command
+            if twosetselection1.content.title() in gearset2:
+                first2setselection = twosetselection1.content.title()
+            else:
+                await ctx.send(">>> No set found")
+                return
+        # if user chooses cancel, print goodbye and exit
+        if first2setselection == gearset2[9]:
+            await ctx.send(">>> Goodbye!")
             return
+        if first2setselection == gearset2[8] or first2setselection.lower() == "none":
+            first2setselection = " "
+        # ---
+        await ctx.send(">>> What is the second set? ")
+        await ctx.send(f"```{listoutgearset2}```")
+        twosetselection2 = await client.wait_for("message", check=checkinput)
+        # ---
+        # User picks second 2 set choice, either through a number or typing it out
+        if twosetselection2.content.isdigit():
+            # if the selection is a number, and is in the range between len() and 1,
+            # set decision, otherwise exit from command
+            if int(twosetselection2.content) <= len(gearset2) and int(twosetselection2.content) != 0:
+                second2setselection = gearset2[int(twosetselection2.content) - 1]
+            else:
+                await ctx.send(">>> Invalid number")
+                return
+        else:
+            # if the user inputs a string, check if its in the array, else exit from command
+            if twosetselection2.content.title() in gearset2:
+                second2setselection = twosetselection2.content.title()
+            else:
+                await ctx.send(">>> No set found")
+                return
+        # if user chooses cancel, print goodbye and exit
+        if second2setselection == gearset2[9]:
+            await ctx.send(">>> Goodbye!")
+            return
+        if second2setselection == gearset2[8] or second2setselection.lower() == "none":
+            second2setselection = " "
+        # ---
+        await ctx.send(">>> What is the third set? ")
+        await ctx.send(f"```{listoutgearset2}```")
+        twosetselection3 = await client.wait_for("message", check=checkinput)
+        # ---
+        # User picks third 2 set choice, either through a number or typing it out
+        if twosetselection3.content.isdigit():
+            # if the selection is a number, and is in the range between len() and 1,
+            # set decision, otherwise exit from command
+            if int(twosetselection3.content) <= len(gearset2) and int(twosetselection3.content) != 0:
+                third2setselection = gearset2[int(twosetselection3.content) - 1]
+            else:
+                await ctx.send(">>> Invalid number")
+                return
+        else:
+            # if the user inputs a string, check if its in the array, else exit from command
+            if twosetselection3.content.title() in gearset2:
+                third2setselection = twosetselection3.content.title()
+            else:
+                await ctx.send(">>> No set found")
+                return
+        # if user chooses cancel, print goodbye and exit
+        if third2setselection == gearset2[9]:
+            await ctx.send(">>> Goodbye!")
+            return
+        if third2setselection == gearset2[8] or third2setselection.lower() == "none":
+            third2setselection = " "
+        # ---
+
+        # makes a string based off of user's choices
+        temparray = [first2setselection, second2setselection, third2setselection]
+        final2setselection = ""
+        for i in range(1, len(temparray)):
+            if temparray[i - 1] != " ":
+                final2setselection += f"{temparray[i - 1]} + "
+        if temparray[2] != " ":
+            final2setselection += temparray[2]
+        else:
+            final2setselection = final2setselection[:-2]
+
+        finalsetselection = final2setselection
+
+        await ctx.send(f">>> You have picked " + final2setselection)
     else:
-        if secondsetselection.content.title() in gearset2:
-            setselection2 = secondsetselection.content.title()
+        await ctx.send(f">>> You have picked " + setselection4)
+        await ctx.send(">>> Enter second set: ")
+        await ctx.send(f"```{listoutgearset2}```")
+        secondsetselection = await client.wait_for("message", check=checkinput)
+        # User picks first 2 set choice, either through a number or typing it out
+        if secondsetselection.content.isdigit():
+            if int(secondsetselection.content) <= len(gearset2) and int(secondsetselection.content) != 0:
+                setselection2 = gearset2[int(secondsetselection.content) - 1]
+            else:
+                await ctx.send(">>> Invalid number")
+                return
         else:
-            await ctx.send(">>> No set found")
-            return
-    await ctx.send(">>> You have picked " + setselection4 + " + " + setselection2)
+            if secondsetselection.content.title() in gearset2:
+                setselection2 = secondsetselection.content.title()
+            else:
+                await ctx.send(">>> No set found")
+                return
+
+        if setselection2 == gearset2[8] or setselection2.lower() == "none":
+            setselection2 = " "
+            await ctx.send(">>> You have picked " + setselection4)
+            finalsetselection = setselection4
+        else:
+            await ctx.send(">>> You have picked " + setselection4 + " + " + setselection2)
+            finalsetselection = f"{setselection4} + {setselection2}"
+
     await ctx.send(">>> Upload a build image")
 
     def checkimage(message):
@@ -257,8 +374,8 @@ async def upload(ctx):
     else:
         if image[0:26] == "https://cdn.discordapp.com":
             r = requests.get(image, stream=True)
-            linename = unitselection.title() + ": " + setselection4 + " + " + setselection2
-            tempimagename = unitselection.title() + ":" + setselection4 + "+" + setselection2 + ".jpg"
+            linename = unitselection.title() + ": " + finalsetselection
+            tempimagename = unitselection.title() + ":" + finalsetselection + ".jpg"
             with open("unit_links.txt") as file:
                 for line in file:
                     if line.split(';')[0] == linename:
