@@ -8,7 +8,8 @@ It is able to calculate the rarity of equipments and store pictures of units gen
 ```
 !gear [starts an interactive session with the user]
 !help [list of commands supported]
-!upload <name of picture> [uploads a picture to a database]
+!upload [uploads a picture to a database]
+!unitbuilds [retrieves units built]
 ```
   
 ## Example Use:
