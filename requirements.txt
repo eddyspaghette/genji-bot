@@ -3,3 +3,4 @@ python-dotenv==0.17.0
 selenium==3.141.0
 requests==2.25.1
 pyimgur==0.6.0
+dropbox==11.17.0
