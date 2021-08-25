@@ -7,6 +7,7 @@ import os
 import grabd
 from dotenv import load_dotenv
 from grabd import text_vals, parse_vals
+import dropbox
 
 
 #load environment variables
