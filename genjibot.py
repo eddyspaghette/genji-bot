@@ -173,7 +173,7 @@ async def upload(ctx):
             await ctx.send(">>> Invalid number")
             return
     else:
-        if unit.content.title() in gearset4:
+        if unit.content.lower() in units:
             unitselection = unit.content.title()
         else:
             await ctx.send(">>> No unit found")
