@@ -411,7 +411,21 @@ async def unitbuilds(ctx, *args):
     names = []
     descriptions = []
 
-    color_dictionary = {"Dark": discord.Color.from_rgb(20, 20, 20),
+    class_dict = {"Knight": "https://epic7x.com/wp-content/themes/epic7x/assets/img/Knight.png",
+                  "Warrior": "https://epic7x.com/wp-content/themes/epic7x/assets/img/Warrior.png",
+                  "Mage": "https://epic7x.com/wp-content/themes/epic7x/assets/img/Mage.png",
+                  "Ranger": "https://epic7x.com/wp-content/themes/epic7x/assets/img/Ranger.png",
+                  "Thief": "https://epic7x.com/wp-content/themes/epic7x/assets/img/Thief.png",
+                  "Soul Weaver": "https://epic7x.com/wp-content/themes/epic7x/assets/img/Soul%20Weaver.png",
+                  }
+
+    element_dict = {"Dark": "https://epic7x.com/wp-content/themes/epic7x/assets/img/Dark.png",
+                    "Light": "https://epic7x.com/wp-content/themes/epic7x/assets/img/Light.png",
+                    "Fire": "https://epic7x.com/wp-content/themes/epic7x/assets/img/Fire.png",
+                    "Ice": "https://epic7x.com/wp-content/themes/epic7x/assets/img/Ice.png",
+                    "Earth": "https://epic7x.com/wp-content/themes/epic7x/assets/img/Earth.png"}
+
+    color_dictionary = {"Dark": discord.Color.dark_purple(),
                         "Light": discord.Color.from_rgb(234, 234, 9),
                         "Fire": discord.Color.from_rgb(238, 26, 15),
                         "Ice": discord.Color.from_rgb(79, 165, 255),
@@ -446,7 +460,7 @@ async def unitbuilds(ctx, *args):
         unit = await client.wait_for("message", check=check)
 
         if unit.content.isdigit():
-            if int(unit.content) <= len(my_set):
+            if int(unit.content) <= len(my_set) and int(unit.content) != 0:
                 userinputtedunit = my_set[int(unit.content) - 1].lower()
             else:
                 await ctx.send(">>> Invalid choice")
@@ -483,7 +497,7 @@ async def unitbuilds(ctx, *args):
         # creates an embed
         else:
             embed = discord.Embed(
-                title=userinputtedunit.title(),
+                # title=userinputtedunit.title(),
             )
 
             unitcolor = ""
@@ -494,20 +508,28 @@ async def unitbuilds(ctx, *args):
                 for line in file:
                     # if unit-info's name is same as user inputted name
                     if line.split(':')[0].lower() == userinputtedunit:
-                        uniturl = line.split(';')[1].strip()
-                        start = ': '
-                        end = ';'
-                        unitcolor = (color_dictionary[(line[line.find(start) + len(start):line.rfind(end)]).strip()])
-
+                        uniturl = line.split('|')[1].strip()
+                        start_color = ': '
+                        end_color = ';'
+                        start_class = "; "
+                        end_class = "|"
+                        unitelement = (element_dict[
+                            (line[line.find(start_color) + len(start_color):line.rfind(end_color)]).strip()])
+                        unitcolor = (color_dictionary[
+                            (line[line.find(start_color) + len(start_color):line.rfind(end_color)]).strip()])
+                        unitclass = (
+                            class_dict[(line[line.find(start_class) + len(start_class):line.rfind(end_class)]).strip()])
             # sets embed description, thumbnail, and color
+            embed.set_author(name=userinputtedunit.upper(), icon_url=unitelement)
             embed.description = f" {stringofdescriptions}\n\n"
             embed.set_thumbnail(url=uniturl)
             embed.colour = unitcolor
-
+            embed.set_footer(text=chr(173), icon_url=unitclass)
             await ctx.send(embed=embed)
 
             os.remove("tempfile.txt")
             os.remove("tempunitinfo.txt")
+
 
             
 client.run(os.getenv('GENJI_TOKEN'))
