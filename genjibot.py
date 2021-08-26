@@ -129,40 +129,66 @@ async def gear(ctx):
 async def cry(ctx):
     await ctx.send("Jickie left me. Now I'm all alone... <:FeelsStrongMan:730679903812321321>")
 
-
+    
 @client.command()
 async def upload(ctx):
-    units = []
+    def checkinput(m):
+        return m.channel == ctx.channel and m.author == ctx.author
+
     namesindb = []
 
-    finalsetselection = ""
+    elements = ["Fire", "Ice", "Earth", "Light", "Dark"]
 
     gearset4 = ["Speed", "Counter", "Attack", "Destruction", "Lifesteal", "Rage", "Revenge", "Injury", "2-set",
                 "Cancel"]
     gearset2 = ["Crit", "Hit", "Health", "Defense", "Resist", "Immunity", "Unity", "Penetration", "None", "Cancel"]
 
+    # Asks what the element they would like to upload first
+    await ctx.send(">>> What element is the unit you would like to upload?")
+
+    element_block = ""
+    for i in range(len(elements)):
+        element_block += (str(i + 1) + ": " + elements[i].title() + "\n")
+    await ctx.send(f"```{element_block}```")
+
+    element_choice = await client.wait_for("message", check=checkinput)
+
+    if element_choice.content.isdigit():
+        if int(element_choice.content) <= len(elements) and int(element_choice.content) != 0:
+            elementselection = elements[int(element_choice.content) - 1]
+        else:
+            await ctx.send(">>> Invalid number")
+            return
+    else:
+        if element_choice.content.title() in elements:
+            elementselection = element_choice.content.title()
+        else:
+            await ctx.send(">>> No unit found")
+            return
+
+    await ctx.send(f"You have chosen {elementselection}")
+
     download_file("tempunitinfo.txt", "/unit_info.txt")
-    # populate units array
+
+    # populate namesindb array
     with open("tempunitinfo.txt") as file:
         for line in file:
-            units.append(str(line.split(':')[0]).lower())
-
-    with open("tempunitinfo.txt") as file:
-        for line in file:
-            namesindb.append(str(line.split(':')[0]).title())
-
-    def checkinput(m):
-        return m.channel == ctx.channel and m.author == ctx.author
+            start = ":"
+            end = ";"
+            elementinfile = (line[line.find(start) + len(start):line.rfind(end)]).strip().title()
+            if elementselection == elementinfile:
+                namesindb.append(str(line.split(':')[0]).lower())
 
     os.remove("tempunitinfo.txt")
     stringofnames = ""
 
     sorted(namesindb)
+    # makes a string for list of units
     for i in range(len(namesindb)):
         stringofnames += (str(i + 1) + ": " + namesindb[i].title() + "\n")
 
     await ctx.send(">>> What unit build would you like to upload?")
-    await ctx.send(f"```{stringofnames} ```")
+    await ctx.send(f"```{stringofnames}```")
     # user input unit name
     unit = await client.wait_for("message", check=checkinput)
 
@@ -174,13 +200,11 @@ async def upload(ctx):
             await ctx.send(">>> Invalid number")
             return
     else:
-        if unit.content.lower() in units:
+        if unit.content.lower() in namesindb:
             unitselection = unit.content.title()
         else:
             await ctx.send(">>> No unit found")
             return
-
-    print(unitselection.lower())
 
     # string for printing out 4-set array and 2-set array
     listoutgearset4 = ""
@@ -191,7 +215,7 @@ async def upload(ctx):
         listoutgearset2 += (str(i + 1) + ": " + gearset2[i] + "\n")
 
     # if user input is in the units
-    if unitselection.lower() in units:
+    if unitselection.lower() in namesindb:
         found = True
     else:
         found = False
@@ -363,11 +387,11 @@ async def upload(ctx):
             return False
         attachment = attachments[0]
         return attachment.filename.endswith(('.jpg', '.png', 'jpeg'))
- 
+
     try:
         msg = await client.wait_for('message', timeout=60.0, check=checkimage)
     except asyncio.TimeoutError:
-        await ctx.send(f">>> I'm tired of waiting")
+        await ctx.send(f">>> I'm tired of waiting . . .")
         return
 
     try:
@@ -403,9 +427,11 @@ async def upload(ctx):
             dbx.files_delete_v2("/unit_and_imgurlinks.txt")
             upload_file("/unit_and_imgurlinks.txt", "tempfile.txt")
             os.remove("tempfile.txt")
+            os.remove("tempunitinfo.txt")
             await ctx.send(">>> Unit added! \nCheck with the command !unitbuilds")
 
 
+     
 @client.command()
 async def unitbuilds(ctx, *args):
     names = []
