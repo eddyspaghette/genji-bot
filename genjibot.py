@@ -363,9 +363,7 @@ async def upload(ctx):
             return False
         attachment = attachments[0]
         return attachment.filename.endswith(('.jpg', '.png', 'jpeg'))
-
-    msg = await client.wait_for('message', check=checkimage)
-    
+ 
     try:
         msg = await client.wait_for('message', timeout=60.0, check=checkimage)
     except asyncio.TimeoutError:
