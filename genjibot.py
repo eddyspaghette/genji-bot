@@ -8,6 +8,7 @@ import grabd
 from dotenv import load_dotenv
 from grabd import text_vals, parse_vals
 import dropbox
+import asyncio
 
 
 #load environment variables
@@ -364,6 +365,12 @@ async def upload(ctx):
         return attachment.filename.endswith(('.jpg', '.png', 'jpeg'))
 
     msg = await client.wait_for('message', check=checkimage)
+    
+    try:
+        msg = await client.wait_for('message', timeout=60.0, check=checkimage)
+    except asyncio.TimeoutError:
+        await ctx.send(f">>> I'm tired of waiting")
+        return
 
     try:
         image = msg.attachments[0].url
